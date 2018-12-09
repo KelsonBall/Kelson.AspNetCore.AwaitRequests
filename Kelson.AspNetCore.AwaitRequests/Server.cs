@@ -24,17 +24,17 @@ namespace Kelson.AspNetCore.AwaitRequests
                 await t;
         }
 
-        internal static readonly ConcurrentDictionary<string, RouteEnumerator> RouteObjects
-            = new ConcurrentDictionary<string, RouteEnumerator>();
+        internal static readonly ConcurrentDictionary<string, ContextRoute> RouteObjects
+            = new ConcurrentDictionary<string, ContextRoute>();
 
         internal async Task HandleRequests(HttpContext context)
         {
             var item = new ContextItem(context);
             foreach (var routepath in RouteObjects)
             {
-                if (routepath.Key.EndsWith(context.Request.Path.Value))
+                if (routepath.Value.MatchesRequest(context.Request))
                 {
-                    routepath.Value.PushRequest(item);
+                    routepath.Value.Enumerator.PushRequest(item);
                     item.Handled.WaitOne();
                     break;
                 }

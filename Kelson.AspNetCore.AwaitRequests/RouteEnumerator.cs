@@ -26,8 +26,7 @@ namespace Kelson.AspNetCore.AwaitRequests
 
         public RouteEnumerator(string route)
         {
-            Route = route;
-            Server.RouteObjects.TryAdd(route, this);
+            Route = route;            
         }
 
         private bool disposed = false;
